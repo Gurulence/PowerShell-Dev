@@ -1,0 +1,165 @@
+{
+  // ---------------------------------------------------------------------------
+  // Tuned for PowerShell 5.1 + 7 and modern .NET. Comments are allowed in
+  // VS Code JSONC files.
+  // ---------------------------------------------------------------------------
+
+  "// ===== PowerShell extension =====": "",
+
+  // Analyse on save, but only surface real problems (Warning+). Errors block nothing.
+  "powershell.scriptAnalysis.enable": true,
+  "powershell.scriptAnalysis.settingsPath": "${workspaceFolder}/.vscode/PSScriptAnalyzerSettings.psd1",
+
+  // Formatting: this is the house style the agent writes in - keep them identical.
+  "powershell.codeFormatting.preset": "Custom",
+  "powershell.codeFormatting.openBraceOnSameLine": true,
+  "powershell.codeFormatting.newLineAfterOpenBrace": true,
+  "powershell.codeFormatting.newLineAfterCloseBrace": true,
+  "powershell.codeFormatting.whitespaceBeforeOpenBrace": true,
+  "powershell.codeFormatting.whitespaceBeforeOpenParen": true,
+  "powershell.codeFormatting.whitespaceAroundOperator": true,
+  "powershell.codeFormatting.whitespaceAfterSeparator": true,
+  "powershell.codeFormatting.whitespaceBetweenParameters": true,
+  "powershell.codeFormatting.whitespaceInsideBrace": true,
+  "powershell.codeFormatting.ignoreOneLineBlock": true,
+  "powershell.codeFormatting.pipelineIndentationStyle": "IncreaseIndentationForFirstPipeline",
+  "powershell.codeFormatting.alignPropertyValuePairs": true,
+  "powershell.codeFormatting.useCorrectCasing": true,
+  "powershell.codeFormatting.trimWhitespaceOnBlankLine": true,
+  "powershell.codeFormatting.useConstantStrings": false,
+
+  // IntelliSense
+  "powershell.codeFolding.enable": true,
+  "powershell.codeFolding.showLastLine": true,
+  "powershell.integratedConsole.showOnStartup": false,
+  "powershell.integratedConsole.focusConsoleOnExecute": false,
+  "powershell.integratedConsole.startInBackground": false,
+  "powershell.startAutomatically": true,
+  "powershell.enableProfileLoading": false,   // deterministic sessions - the agent's tests must not inherit your profile
+  "powershell.pester.useLegacyCodeLens": false,
+  "powershell.pester.codeLens": true,
+  "powershell.developer.editorServicesLogLevel": "Warning",
+  "powershell.sideBar.CommandExplorerVisibility": true,
+
+  // ===== C# / .NET =====
+  "dotnet.defaultSolution": "",
+  "dotnet.server.useOmnisharp": false,        // Roslyn (C# Dev Kit) is faster and more accurate
+  "dotnet.completion.showCompletionItemsFromUnimportedNamespaces": true,
+  "dotnet.inlayHints.enableInlayHintsForParameters": true,
+  "dotnet.inlayHints.enableInlayHintsForLiteralParameters": true,
+  "dotnet.inlayHints.enableInlayHintsForIndexerParameters": true,
+  "dotnet.inlayHints.enableInlayHintsForObjectCreationParameters": true,
+  "dotnet.inlayHints.enableInlayHintsForOtherParameters": true,
+  "dotnet.unitTests.runSettingsPath": "",
+  "csharp.suppressDotnetInstallWarning": true,
+  "csharp.suppressDotnetRestoreNotification": true,
+  "omnisharp.enableEditorConfigSupport": true,
+  "omnisharp.enableRoslynAnalyzers": true,
+
+  "// ===== Editor: language-specific =====": "",
+  "[powershell]": {
+    "editor.defaultFormatter": "ms-vscode.PowerShell",
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.rulers": [0, 120],
+    "editor.wordWrap": "off",
+    "editor.quickSuggestions": { "comments": false, "strings": true, "other": true },
+    "editor.suggestSelection": "first",
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true
+  },
+  "[csharp]": {
+    "editor.defaultFormatter": "ms-dotnettools.csharp",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.rulers": [0, 120],
+    "editor.suggest.insertMode": "replace"
+  },
+  "[ps1xml]": { "editor.defaultFormatter": "ms-vscode.PowerShell" },
+  "[json]": { "editor.tabSize": 2, "editor.formatOnSave": true },
+  "[jsonc]": { "editor.tabSize": 2 },
+  "[xml]": { "editor.tabSize": 2 },
+  "[markdown]": { "editor.wordWrap": "on", "editor.trimAutoWhitespace": false },
+  "[shellscript]": { "editor.tabSize": 4 },
+
+  // ===== Files / search hygiene =====
+  "files.encoding": "utf8",
+  "files.eol": "\r\n",                         // PowerShell on Windows expects CRLF; .editorconfig overrides per-type
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "files.exclude": {
+    "**/.git": true,
+    "**/bin": true,
+    "**/obj": true,
+    "**/node_modules": true,
+    "**/TestResults": true
+  },
+  "search.exclude": {
+    "**/bin": true,
+    "**/obj": true,
+    "**/.agent/sessions": true,
+    "**/.agent/logs": true,
+    "**/packages": true,
+    "**/TestResults": true
+  },
+  "files.watcherExclude": {
+    "**/bin/**": true,
+    "**/obj/**": true,
+    "**/.agent/**": true
+  },
+  "files.associations": {
+    "*.ps1xml": "ps1xml",
+    "*.psd1": "powershell",
+    "*.psm1": "powershell",
+    "*.ps1": "powershell",
+    "*.props": "xml",
+    "*.targets": "xml",
+    "*.csproj": "xml",
+    "*.sln": "plaintext"
+  },
+
+  // ===== Terminal =====
+  "terminal.integrated.defaultProfile.windows": "PowerShell 7",
+  "terminal.integrated.profiles.windows": {
+    "PowerShell 7": { "path": "pwsh.exe", "args": ["-NoLogo"] },
+    "Windows PowerShell 5.1": { "path": "powershell.exe", "args": ["-NoLogo"] },
+    "Developer PowerShell": {
+      "source": "PowerShell",
+      "args": ["-NoLogo"]
+    }
+  },
+  "terminal.integrated.defaultProfile.linux": "pwsh",
+  "terminal.integrated.profiles.linux": {
+    "pwsh": { "path": "pwsh", "args": ["-NoLogo"] },
+    "bash": { "path": "bash" }
+  },
+  "terminal.integrated.scrollback": 20000,
+  "terminal.integrated.enablePersistentSessions": true,
+
+  // ===== Git =====
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "git.enableSmartCommit": true,
+  "git.pruneOnFetch": true,
+  "git.branchProtection": ["main", "master"],
+
+  // ===== Quality of life =====
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": "active",
+  "editor.renderWhitespace": "selection",
+  "editor.minimap.maxColumn": 100,
+  "workbench.editor.enablePreview": false,
+  "explorer.confirmDelete": true,
+  "explorer.confirmDragAndDrop": false,
+  "files.autoSave": "onFocusChange",
+  "diffEditor.ignoreTrimWhitespace": false,
+
+  // ===== Tasks: the agent runner =====
+  "task.autoDetect": "on",
+  "task.saveBeforeRun": "always",
+  "workbench.action.tasks.runTask": {}
+}

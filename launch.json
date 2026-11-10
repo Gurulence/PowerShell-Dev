@@ -1,0 +1,77 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "PS: current file",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "${file}",
+      "args": [],
+      "cwd": "${file}"
+    },
+    {
+      "name": "PS: current file with arguments",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "${file}",
+      "args": ["${input:scriptArgs}"],
+      "cwd": "${workspaceFolder}",
+      "createTemporaryIntegratedConsole": true
+    },
+    {
+      "name": "PS: module manifest import test",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "${workspaceFolder}/.agent/agent-doctor.ps1",
+      "args": ["-VerifyModule", "${input:manifestPath}"],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "PS: Pester current file",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "${workspaceFolder}/.agent/tools/Invoke-AgentPester.ps1",
+      "args": ["-Path", "${file}"],
+      "cwd": "${workspaceFolder}"
+    },
+
+    {
+      "name": "NET: launch project",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "NET: build",
+      "program": "${workspaceFolder}/src/App/bin/Debug/net9.0/App.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/src/App",
+      "console": "integratedTerminal",
+      "stopAtEntry": false,
+      "env": { "DOTNET_ENVIRONMENT": "Development" }
+    },
+    {
+      "name": "NET: launch project (pass-through)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "NET: build",
+      "program": "${command:dotnet.getTargetPath}",
+      "args": ["${input:scriptArgs}"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "NET: attach to process",
+      "type": "coreclr",
+      "request": "attach"
+    },
+    {
+      "name": "PS: PowerShell Editor Services (attach to host)",
+      "type": "PowerShell",
+      "request": "attach",
+      "name": "PS: attach to host process",
+      "processId": "${command:PowerShell.PickProcess}"
+    }
+  ],
+  "inputs": [
+    { "id": "scriptArgs", "type": "promptString", "description": "Arguments (space separated)", "default": "" },
+    { "id": "manifestPath", "type": "promptString", "description": "Path to .psd1 module manifest", "default": "./src/MyModule/MyModule.psd1" }
+  ]
+}

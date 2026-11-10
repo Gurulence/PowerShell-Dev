@@ -1,0 +1,5 @@
+[
+  {"name": "WriteFile", "args": {"path": "src/Tty/Demo.psm1", "content": "function Get-Demo {\n    [CmdletBinding()]\n    param()\n    'demo'\n}\n"}},
+  {"name": "EditFile", "args": {"path": "src/Tty/Demo.psm1", "old_text": "    'demo'", "new_text": "    'demo-v2'"}},
+  {"name": "EditFile", "args": {"path": "src/Tty/Demo.psm1", "old_text": "    'demo'", "new_text": "    'demo-v3'"}}
+]

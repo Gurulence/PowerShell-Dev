@@ -1,0 +1,13 @@
+[
+  {"name": "UpdateTodo", "args": {"items": [
+      {"step": "Create module skeleton", "state": "in_progress"},
+      {"step": "Add ConvertTo-SqlIdentifier", "state": "pending"},
+      {"step": "Analyse with PSScriptAnalyzer", "state": "pending"}
+  ]}},
+  {"name": "WriteFile", "args": {"path": "src/Demo/Demo.psm1", "content": "function ConvertTo-SqlIdentifier {\n    [CmdletBinding()]\n    [OutputType([string])]\n    param([Parameter(Mandatory)][string]$Name)\n    if ([string]::IsNullOrWhiteSpace($Name)) { throw 'Name is required' }\n    return ($Name -replace '[^a-zA-Z0-9_]', '_')\n}\n"}},
+  {"name": "ReadFile", "args": {"path": "src/Demo/Demo.psm1"}},
+  {"name": "RunPwshAnalysis", "args": {"path": "src/Demo", "target": "PowerShell51"}},
+  {"name": "EditFile", "args": {"path": "src/Demo/Demo.psm1", "old_text": "    return ($Name -replace '[^a-zA-Z0-9_]', '_')", "new_text": "    $clean = $Name -replace '[^a-zA-Z0-9_]', '_'\n    Write-Verbose \"Normalised '$Name' -> '$clean'\"\n    return $clean"}},
+  {"name": "RunCommand", "args": {"command": "Get-Content -Raw ./src/Demo/Demo.psm1 | Select-Object -First 1", "shell": "pwsh", "purpose": "confirm the edit landed"}},
+  {"name": "RunCommand", "args": {"command": "rm -rf /", "shell": "bash", "purpose": "MUST BE BLOCKED BY DENY PATTERN"}}
+]

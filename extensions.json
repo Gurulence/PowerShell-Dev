@@ -1,0 +1,43 @@
+{
+  "recommendations": [
+    // ---- PowerShell ----
+    "ms-vscode.powershell",
+    "tylerleonhardt.vscode-pester-test-adapter",
+    "pspester.pester-test-adapter",
+    "ms-vscode.powershell-preview",
+
+    // ---- .NET / C# ----
+    "ms-dotnettools.csharp",
+    "ms-dotnettools.csdevkit",
+    "ms-dotnettools.vscode-dotnet-runtime",
+    "ms-dotnettools.vscodeintellicode-csharp",
+    "patcx.vscode-nuget-gallery",
+    "kreativ-software.csharpextensions",
+    "adrianwilczynski.namespace",
+
+    // ---- Testing / quality ----
+    "usernamehw.errorlens",
+    "streetsidesoftware.code-spell-checker",
+    "editorconfig.editorconfig",
+    "davidanson.vscode-markdownlint",
+    "sonarsource.sonarlint-vscode",
+
+    // ---- Git ----
+    "eamodio.gitlens",
+    "mhutchie.git-graph",
+
+    // ---- Agent workflow ----
+    "gruntfuggly.todo-tree",
+    "alefragnani.project-manager",
+    "ryu1kn.partial-diff",
+    "mechatroner.rainbow-csv",
+    "yzhang.markdown-all-in-one",
+    "redhat.vscode-yaml",
+    "tamasfe.even-better-toml"
+  ],
+  "unwantedRecommendations": [
+    "ms-vscode.csharp",            // deprecated; superseded by ms-dotnettools.csharp
+    "ms-vscode.omnisharp",         // Roslyn-based C# extension is faster
+    "ms-vscode.powershell-core"    // renamed to ms-vscode.powershell
+  ]
+}

@@ -1,0 +1,205 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Agent: run task (approve every step)",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoLogo", "-NoProfile",
+        "-File", "${workspaceFolder}/.agent/Agent.ps1",
+        "-Workspace", "${workspaceFolder}",
+        "${input:agentTask}"
+      ],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "dedicated", "focus": true, "clear": true },
+      "group": { "kind": "build", "isDefault": false }
+    },
+    {
+      "label": "Agent: run task in a mode",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoLogo", "-NoProfile",
+        "-File", "${workspaceFolder}/.agent/Agent.ps1",
+        "-Workspace", "${workspaceFolder}",
+        "-Mode", "${input:agentMode}",
+        "${input:agentTask}"
+      ],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "dedicated", "focus": true, "clear": true }
+    },
+    {
+      "label": "Agent: dry run (no execution, no API call)",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoLogo", "-NoProfile",
+        "-File", "${workspaceFolder}/.agent/Agent.ps1",
+        "-Workspace", "${workspaceFolder}",
+        "-DryRun",
+        "${input:agentTask}"
+      ],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "dedicated", "focus": true, "clear": true }
+    },
+    {
+      "label": "Agent: resume last session",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoLogo", "-NoProfile",
+        "-Command",
+        "$s = Get-ChildItem .agent/sessions/*.json | Sort-Object LastWriteTime | Select-Object -Last 1; if (-not $s) { throw 'no sessions yet' }; & ${workspaceFolder}/.agent/Agent.ps1 -Workspace ${workspaceFolder} -SessionId $s.BaseName"
+      ],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "dedicated", "focus": true, "clear": true }
+    },
+    {
+      "label": "Agent: doctor (verify environment)",
+      "type": "shell",
+      "command": "pwsh",
+      "args": ["-NoLogo", "-NoProfile", "-File", "${workspaceFolder}/.agent/agent-doctor.ps1", "-Workspace", "${workspaceFolder}"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "dedicated", "focus": true, "clear": true }
+    },
+
+    {
+      "label": "PS: analyse workspace",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoLogo", "-NoProfile", "-Command",
+        "Invoke-ScriptAnalyzer -Path '${workspaceFolder}' -Recurse -Settings '${workspaceFolder}/.vscode/PSScriptAnalyzerSettings.psd1' | Sort-Object ScriptName, Line | Format-Table -AutoSize -Wrap"
+      ],
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "dedicated", "focus": true, "clear": true }
+    },
+    {
+      "label": "PS: analyse + verify 5.1 syntax compatibility",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoLogo", "-NoProfile", "-Command",
+        "$r = Invoke-ScriptAnalyzer -Path '${workspaceFolder}' -Recurse -Settings @{ Rules = @{ PSUseCompatibleSyntax = @{ Enable = $true; TargetVersions = @('5.1','7.0') } } }; if (-not $r) { 'Incompatible syntax: none.' } else { $r | Format-Table RuleName, ScriptName, Line, Message -AutoSize -Wrap }"
+      ],
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "dedicated", "focus": true, "clear": true }
+    },
+    {
+      "label": "PS: run Pester",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoLogo", "-NoProfile", "-Command",
+        "$c = New-PesterConfiguration; $c.Run.Path = './tests'; $c.Output.Verbosity = 'Detailed'; $c.Run.PassThru = $true; $r = Invoke-Pester -Configuration $c; if ($r.FailedCount -gt 0) { exit 1 }"
+      ],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": [],
+      "group": { "kind": "test", "isDefault": true },
+      "presentation": { "reveal": "always", "panel": "dedicated", "focus": true, "clear": true }
+    },
+    {
+      "label": "PS: run Pester with coverage",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoLogo", "-NoProfile", "-Command",
+        "$c = New-PesterConfiguration; $c.Run.Path = './tests'; $c.CodeCoverage.Enabled = $true; $c.CodeCoverage.Path = @('./src'); $c.CodeCoverage.OutputFormat = 'JaCoCo'; $c.CodeCoverage.OutputPath = './artifacts/coverage.xml'; $c.Output.Verbosity = 'Detailed'; Invoke-Pester -Configuration $c"
+      ],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "PS: test in Windows PowerShell 5.1",
+      "type": "shell",
+      "command": "powershell.exe",
+      "args": [
+        "-NoLogo", "-NoProfile", "-Command",
+        "$c = New-PesterConfiguration; $c.Run.Path = './tests'; $c.Output.Verbosity = 'Detailed'; Invoke-Pester -Configuration $c"
+      ],
+      "options": { "cwd": "${workspaceFolder}" },
+      "windows": { "command": "powershell.exe" },
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "dedicated", "focus": true, "clear": true }
+    },
+
+    {
+      "label": "NET: build",
+      "type": "process",
+      "command": "dotnet",
+      "args": ["build", "-c", "Debug", "-v", "minimal", "-nologo"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": "$msCompile",
+      "group": { "kind": "build", "isDefault": true }
+    },
+    {
+      "label": "NET: build release",
+      "type": "process",
+      "command": "dotnet",
+      "args": ["build", "-c", "Release", "-v", "minimal", "-nologo"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "NET: test",
+      "type": "process",
+      "command": "dotnet",
+      "args": ["test", "--nologo", "-v", "minimal"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": "$msCompile",
+      "group": { "kind": "test", "isDefault": true }
+    },
+    {
+      "label": "NET: watch (rebuild on save)",
+      "type": "process",
+      "command": "dotnet",
+      "args": ["watch", "--project", "${input:csproj}", "run"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": "$msCompile",
+      "isBackground": true,
+      "presentation": { "reveal": "always", "panel": "dedicated" }
+    },
+    {
+      "label": "NET: format (whitespace only)",
+      "type": "process",
+      "command": "dotnet",
+      "args": ["format", "whitespace"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Full: analyse + build + test",
+      "dependsOrder": "sequence",
+      "dependsOn": ["PS: analyse workspace", "NET: build", "NET: test"],
+      "problemMatcher": [],
+      "group": "build"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "agentTask",
+      "type": "promptString",
+      "description": "What should the agent do?",
+      "default": "Describe the task in one sentence"
+    },
+    {
+      "id": "agentMode",
+      "type": "pickString",
+      "description": "Agent mode",
+      "options": ["planner", "hybrid", "executor"],
+      "default": "hybrid"
+    },
+    {
+      "id": "csproj",
+      "type": "promptString",
+      "description": "Path to the .csproj to watch",
+      "default": "src/App/App.csproj"
+    }
+  ]
+}
